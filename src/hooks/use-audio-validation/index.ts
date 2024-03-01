@@ -28,18 +28,9 @@ export type UseAudioValidationReturn = {
 	isValidatingAudio: boolean;
 	validateAudio: (
 		audio: Blob,
-		successCallback: ( info?: ValidatedAudioInformation ) => void,
+		successCallback: () => void,
 		errorCallback: ( error: string ) => void
 	) => void;
-};
-
-/**
- * The validated audio information.
- */
-export type ValidatedAudioInformation = {
-	duration: number;
-	isFile: boolean;
-	size: number;
 };
 
 /**
@@ -51,11 +42,7 @@ export default function useAudioValidation(): UseAudioValidationReturn {
 	const [ isValidatingAudio, setIsValidatingAudio ] = useState< boolean >( false );
 
 	const validateAudio = useCallback(
-		(
-			audio: Blob,
-			successCallback: ( info?: ValidatedAudioInformation ) => void,
-			errorCallback: ( error: string ) => void
-		) => {
+		( audio: Blob, successCallback: () => void, errorCallback: ( error: string ) => void ) => {
 			setIsValidatingAudio( true );
 
 			// Check if the audio file is too large
@@ -67,8 +54,7 @@ export default function useAudioValidation(): UseAudioValidationReturn {
 			}
 
 			// When it's a file, check the media type
-			const isFile = audio instanceof File;
-			if ( isFile ) {
+			if ( audio instanceof File ) {
 				if ( ! ALLOWED_MEDIA_TYPES.includes( audio.type ) ) {
 					setIsValidatingAudio( false );
 					return errorCallback(
@@ -99,7 +85,7 @@ export default function useAudioValidation(): UseAudioValidationReturn {
 						);
 					}
 					setIsValidatingAudio( false );
-					return successCallback( { duration, isFile, size: audio?.size } );
+					return successCallback();
 				} );
 			} );
 		},

@@ -3,15 +3,7 @@
  */
 export type UseAudioValidationReturn = {
     isValidatingAudio: boolean;
-    validateAudio: (audio: Blob, successCallback: (info?: ValidatedAudioInformation) => void, errorCallback: (error: string) => void) => void;
-};
-/**
- * The validated audio information.
- */
-export type ValidatedAudioInformation = {
-    duration: number;
-    isFile: boolean;
-    size: number;
+    validateAudio: (audio: Blob, successCallback: () => void, errorCallback: (error: string) => void) => void;
 };
 /**
  * Hook to handle the validation of an audio file.
